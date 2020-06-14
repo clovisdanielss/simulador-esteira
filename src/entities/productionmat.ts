@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser'
+import * as Mqtt from 'mqtt'
 
 class ProductionMat {
 
@@ -29,6 +30,7 @@ class ProductionMat {
       let modal = document.getElementById("modal")
       modal.className = `modal ${this.id}`
     })
+
   }
 
   /** 
@@ -42,10 +44,11 @@ class ProductionMat {
     }
   }
   /**
-  * Define aceleração da esteira
+  * Define aceleração da esteira. Recebe em m/s². Transforma em px/s²
   */
   public setAcceleration(acceleration?: number) {
     if (acceleration !== undefined) {
+      acceleration = (acceleration * this.mat.width) / this.meters
       this.acceleration = acceleration
     }
     this.effect.setAcceleration(this.acceleration, 0)
@@ -55,6 +58,10 @@ class ProductionMat {
   */
   public getVelocity() {
     return (this.effect.body.velocity.x * this.meters) / this.mat.width
+  }
+
+  public getAcceleration(){
+    return (this.acceleration * this.meters) / this.mat.width
   }
   /**
   * Para a esteira de vez.
@@ -68,7 +75,8 @@ class ProductionMat {
   * Inicia a esteira.
   */
   public start() {
-    this.setAcceleration(10)
+    this.setAcceleration(.15)
+    console.log("Start: ",this.acceleration)
   }
 
   /** 
@@ -94,7 +102,6 @@ class ProductionMat {
     // turn to oposite.
     this.acceleration *= -1
     this.setAcceleration()
-    console.log(this.acceleration)
   }
 
   /**
@@ -113,7 +120,8 @@ class ProductionMat {
       `
       let velocity = document.getElementById("velocity")
       velocity.innerHTML = `
-       Velocidade : ${this.getVelocity().toFixed(2)} m/s
+       Velocidade : ${this.getVelocity().toFixed(2)} m/s <br/>
+       Aceleração : ${this.getAcceleration().toFixed(2)} m/s²
       `
       let size = document.getElementById("size")
       size.innerHTML = `
@@ -134,8 +142,8 @@ class ProductionMat {
         start.onclick = onStart
 
         let acceleration = <HTMLInputElement> document.getElementById("acceleration")
-        acceleration.value = this.acceleration.toString()
-        acceleration.onchange = (e) => {
+        acceleration.value = this.getAcceleration().toFixed(2).toString()
+        acceleration.onkeypress = (e) => {
           let target = <HTMLInputElement>e.target
           this.setAcceleration(parseFloat(target.value))
         }
@@ -150,6 +158,7 @@ class ProductionMat {
     this.checkVelocityConstraint()
     this.reset()
     this.displayInfo()
+
   }
 
 }
