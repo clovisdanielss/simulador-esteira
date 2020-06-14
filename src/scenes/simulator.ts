@@ -12,7 +12,9 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class Simulator extends Phaser.Scene {
 
   productionMats: Array<ProductionMat> = []
+  productionMatsIds: Phaser.GameObjects.Text
   objects: Array<Phaser.Physics.Arcade.Sprite> = []
+
 
   constructor() {
     super(sceneConfig);
@@ -29,7 +31,7 @@ export class Simulator extends Phaser.Scene {
     });
 
 
-    //this.textVelocity = this.add.text(100, 50, 'Velocity: 0 m/s', { fill: '#000000' }).setFontSize(18);
+    this.productionMatsIds = this.add.text(100, 50, "IDs: ", { fill: '#000000' }).setFontSize(18);
     //this.textSizeMatMeters = this.add.text(100, 75, 'Meters: 10', { fill: '#000000' }).setFontSize(18);
 
   }
@@ -48,6 +50,7 @@ export class Simulator extends Phaser.Scene {
     effect.y -= effect.height / 4
 
     let productionMat = new ProductionMat(this.productionMats.length, mat, effect)
+    this.productionMatsIds.text += this.productionMats.length.toString() + ','
 
     this.productionMats.push(productionMat)
 
@@ -56,6 +59,13 @@ export class Simulator extends Phaser.Scene {
 
   public popProductionMat() {
     let pmat = this.productionMats.pop()
+    let ids = this.productionMatsIds.text.split(":")[1].split(",")
+    let prefix = this.productionMatsIds.text.split(":")[0]
+    //ids: "0,1," Antes do split
+    //ids: ["0", "1", ""] Depois do split
+    ids.splice(ids.length-2,1)
+    //ids: ["0", ""] Depois do splice
+    this.productionMatsIds.text = prefix + ":" + ids.join(",")
     pmat.mat.destroy()
     pmat.effect.destroy()
     this.redraw()
