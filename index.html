@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta http-equiv="cleartype" content="on">
+
+    <style>
+        html,
+        body,
+        canvas {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .modal{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            min-height: 100px;
+            width: 300px;
+            z-index: 10;
+            padding: 5px;
+            background-color: azure;
+        }
+
+        .invisible{
+            display: none;
+        }
+
+        .close{
+            color: red;
+            position: absolute;
+            top:5px;
+            right: 5px;
+        }
+
+        .close:hover{
+            color:gray
+        }
+
+        h3{
+            margin:0px 30px 0px 10px;
+        }
+
+        .button-group{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <div id="modal" class="modal invisible">
+            <h3 id="name">Modal Esteira</h3>
+            <hr/>
+            <span id="close" class="close" onclick="onClickClose">x</span>
+            <!-- Atenção, os elementos aqui expressos devem expressar os
+            valores relativos a esteira, assim como a edição dos mesmos. -->
+            <h4 id="velocity"></h4>
+            <h4 id="size"></h4>
+            <div class="button-group">
+                <button id="start">Iniciar</button>
+                <button id="stop">Parar</button>
+                <button id="reverse">Inverter</button>
+                <label for="acceleration">Aceleração (Press Enter): </label>
+            <input type="text" id="acceleration"/>
+            </div>
+            
+
+        </div>
+    </div>
+    <script src="vendors.app.bundle.js"></script>
+    <script src="app.bundle.js"></script>
+    <script>
+        document.getElementById("close").onclick = onClickClose
+        function onClickClose(e){
+            document.getElementById("modal").className = "modal invisible"
+        }
+    </script>
+</body>
+
+</html>
